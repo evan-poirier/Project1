@@ -74,7 +74,6 @@ int main() {
    }
 
    // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
-
    std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
       return x.second > y.second;
    });
