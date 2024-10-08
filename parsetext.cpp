@@ -18,19 +18,6 @@
 #include <string>
 #include <algorithm>
 
-/*
-class Word {
-   public:
-      int appearances;
-      std::string content;
-
-      Word(int apps, std::string letters) {
-         appearances = apps;
-         content = letters;
-      }
-};
-*/
-
 
 int main() {
 
@@ -47,6 +34,7 @@ int main() {
          tokens.push_back(*word);
       }
    }
+
 
    // insert each word into an map in O(n lg(n)) time
    // performs a map search in O(lg(n)) time, and then either 
@@ -65,6 +53,7 @@ int main() {
       }
    }
 
+
    // fills a vector with all of the pairs from the map in O(n) time
 
    std::vector<std::pair<std::string, int>> wordsVector;
@@ -73,7 +62,9 @@ int main() {
       wordsVector.push_back(wordPair);
    }
 
+
    // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
+
    std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
       return x.second > y.second;
    });
