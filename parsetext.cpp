@@ -14,8 +14,28 @@
 #include <iostream>
 #include <vector>
 #include <regex>
+#include <map>
+#include <string>
+#include <algorithm>
+
+/*
+class Word {
+   public:
+      int appearances;
+      std::string content;
+
+      Word(int apps, std::string letters) {
+         appearances = apps;
+         content = letters;
+      }
+};
+*/
+
 
 int main() {
+
+   // parse input text 
+
    std::string text;
    std::vector<std::string> tokens;
    const std::regex delim("\\s+"); 
@@ -28,8 +48,40 @@ int main() {
       }
    }
 
-   for(const auto & str : tokens)
-      std::cout << str << std::endl;
+   // insert each word into an map in O(n lg(n)) time
+   // performs a map search in O(lg(n)) time, and then either 
+   //    - increases the value of the pair pointed to by the iterator in O(1) time
+   //    - inserts a new pair in O(lg(n)) time
+
+   std::map<std::string, int> wordOccurrences;
+
+   for (const auto & str : tokens) {
+      auto it = wordOccurrences.find(str);
+
+      if (it != wordOccurrences.end()) {
+         it->second ++;
+      } else {
+         wordOccurrences.insert(std::pair<std::string, int>(str, 1));
+      }
+   }
+
+   // fills a vector with all of the pairs from the map in O(n) time
+
+   std::vector<std::pair<std::string, int>> wordsVector;
+
+   for (const auto &wordPair : wordOccurrences) {
+      wordsVector.push_back(wordPair);
+   }
+
+   // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
+
+   std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
+      return x.second > y.second;
+   });
+
+   for (const auto &wordPair : wordsVector) {
+      std::cout << wordPair.first << ": " << wordPair.second << std::endl;
+   }
 
    return 0;
 }
