@@ -17,12 +17,15 @@
 #include <map>
 #include <string>
 #include <algorithm>
+#include <chrono>
 
 
 int main() {
 
-   // parse input text 
+   // get starting time value
+   const auto start = std::chrono::high_resolution_clock::now();
 
+   // parse input text
    std::string text;
    std::vector<std::string> tokens;
    const std::regex delim("\\s+"); 
@@ -35,12 +38,10 @@ int main() {
       }
    }
 
-
    // insert each word into an map in O(n lg(n)) time
    // performs a map search in O(lg(n)) time, and then either 
    //    - increases the value of the pair pointed to by the iterator in O(1) time
    //    - inserts a new pair in O(lg(n)) time
-
    std::map<std::string, int> wordOccurrences;
 
    for (const auto & str : tokens) {
@@ -53,18 +54,14 @@ int main() {
       }
    }
 
-
    // fills a vector with all of the pairs from the map in O(n) time
-
    std::vector<std::pair<std::string, int>> wordsVector;
 
    for (const auto &wordPair : wordOccurrences) {
       wordsVector.push_back(wordPair);
    }
 
-
    // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
-
    std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
       return x.second > y.second;
    });
@@ -72,6 +69,11 @@ int main() {
    for (const auto &wordPair : wordsVector) {
       std::cout << wordPair.first << ": " << wordPair.second << std::endl;
    }
+
+   // get ending time value, calculate duration, print duration
+   const auto stop = std::chrono::high_resolution_clock::now();
+   const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(stop-start);
+   std::cout << milliseconds.count() << " milliseconds elapsed." << std::endl;
 
    return 0;
 }
