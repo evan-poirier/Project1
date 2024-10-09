@@ -1,3 +1,17 @@
+// Name: Evan Poirier
+// Email: espoirier@crimson.ua.edu
+// Course Section: Fall 2024 CS 201
+// Homework #: 1
+// To Compile: g++ -std=c++20 parsetext.cpp
+// To Run: ./a.exe < input.txt
+//
+// Notes:
+// Rather than printing to the terminal, this program creates an output.txt file
+// with total, unique total, and individual word counts. 
+// I did this because on my PC, I was not able to scroll up to see all of the words 
+// in the terminal. It also reduced the run time greatly.
+
+
 // Sample program to read and split text delimited by whitespace
 // Uses C++ regular expression library function std::sregex_token_iterator
 // For more details see:
@@ -18,6 +32,7 @@
 #include <string>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 
 
 int main() {
@@ -38,6 +53,13 @@ int main() {
       }
    }
 
+   //create .txt file for output
+   std::ofstream output_file("output.txt");
+   if (!output_file.is_open()) {
+      std::cout << "Error: could not open text output file correctly" << std::endl;
+      return 1;
+   }
+
    // insert each word into an map in O(n lg(n)) time
    // performs a map search in O(lg(n)) time, and then either 
    //    - increases the value of the pair pointed to by the iterator in O(1) time
@@ -55,20 +77,29 @@ int main() {
    }
 
    // fills a vector with all of the pairs from the map in O(n) time
+   // also creates a count of total and unique words in the output file
    std::vector<std::pair<std::string, int>> wordsVector;
+   int total_words = 0;
+   int unique_words = 0;
 
    for (const auto &wordPair : wordOccurrences) {
+      total_words += wordPair.second;
+      unique_words ++;
       wordsVector.push_back(wordPair);
    }
+
+   output_file << "The input file contains " << unique_words << " unique words, and " << total_words << " total words:" << std::endl << std::endl;
 
    // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
    std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
       return x.second > y.second;
    });
 
+   // puts output into text file, close file
    for (const auto &wordPair : wordsVector) {
-      std::cout << wordPair.first << ": " << wordPair.second << std::endl;
+      output_file << wordPair.first << ": " << wordPair.second << std::endl;
    }
+   output_file.close();
 
    // get ending time value, calculate duration, print duration
    const auto stop = std::chrono::high_resolution_clock::now();
