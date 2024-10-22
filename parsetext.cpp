@@ -92,6 +92,13 @@ int main() {
 
    // sorts the vector by the value of each pair (number of appearances) using std::stable_sort in O(n lg(n)) time
    std::sort(wordsVector.begin(), wordsVector.end(), [=](std::pair<std::string, int> &x, std::pair<std::string, int> &y) {
+
+      // I forgot to put this bit of code in initially:
+      if (x.second == y.second) {
+         return x.first > y.first;
+      }
+      // end of new code
+
       return x.second > y.second;
    });
 
